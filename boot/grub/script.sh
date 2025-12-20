@@ -3,11 +3,11 @@ username=null
 password=1511 
 timezone=Asia/Jakarta
 drivpath=/dev/sda
-efispath=/dev/sda5
-bootpath=/dev/sda6
-procpath=/dev/sda7
-swappath=/dev/sda8
-homepath=/dev/sda9
+efispath=
+bootpath=/dev/sda5
+procpath=/dev/sda6
+swappath=/dev/sda7
+homepath=/dev/sda8
 
 
 # root partition
@@ -41,7 +41,7 @@ function create_home {
 
 # package
 function packages {
-    pacstrap /mnt base base-devel neovim linux-zen linux-firmware intel-ucode mkinitcpio efibootmgr os-prober grub iwd intel-ucode --noconfirm &&
+    pacstrap /mnt base base-devel neovim linux-zen linux-firmware amd-ucode mkinitcpio efibootmgr os-prober grub iwd --noconfirm &&
     genfstab -U /mnt >> /mnt/etc/fstab
 }
 
@@ -88,8 +88,9 @@ function user {
 
 # grub
 function grub_install {
-    arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch --modules="tpm --disable-shim-lock" &&
-    echo 'GRUB_DISABLE_OS_PROBER=false' >> /mnt/etc/default/grub
+    arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch  &&
+    echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub
+
 }
 
 
@@ -119,13 +120,13 @@ function efi {
 
 # entries
 function entries {
-    echo "#!/bin/bash"
-    echo "menuentry Arch linux {" >> /mnt/etc/grub.d/40
-    echo "    linux /kernel/vmlinuz-linux-zen root=UUID=$(blkid -s UUID -o value $procpath)" >> /mnt/etc/grub.d/40_custom &&
-    echo "    initrd /kernel/intel-ucode.img" >> /mnt/etc/grub.d/40_custom &&
-    echo "    initrd /initramfs-linux-zen.img" >> /mnt/etc/grub.d/40_custom &&
-    echo "}" >> /mnt/etc/grub.d/40_custom
-    chmod +x /mnt/etc/grub.d/40_custom
+cat << EOF >> /mnt/etc/grub.d/40_custom
+menuentry "Arch Linux" {
+   linux /kernel/vmlinuz-linux-zen root=UUID=$(blkid -s UUID -o value $procpath)
+   initrd /kernel/amd-ucode.img
+   initrd /initramfs-linux-zen.img
+}
+EOF
 }
 
 
