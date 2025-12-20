@@ -43,3 +43,23 @@ Adding boot menu entry for UEFI Firmware Settings ...
 /etc/grub.d/40_custom: line 6: syntax error near unexpected token `}'
 /etc/grub.d/40_custom: line 6: `}'
 ```
+
+
+## uji coba script v0.0.5
+hasil: kesalahan pada konfigurasi custom entries grub
+```
+[root@archiso /]# grub-mkconfig -o /boot/grub/grub.cfg
+Generating grub configuration file ...
+Warning: os-prober will be executed to detect other bootable partitions.
+Its output will be used to detect bootable binaries on them and create new boot entries.
+Adding boot menu entry for UEFI Firmware Settings ...
+error: grub-core/script/lexer.c:grub_script_yyerror:352:syntax error.
+error: grub-core/script/lexer.c:grub_script_yyerror:352:Incorrect command.
+error: grub-core/script/lexer.c:grub_script_yyerror:352:syntax error.
+Syntax error at line 144
+Syntax errors are detected in generated GRUB config file.
+Ensure that there are no errors in /etc/default/grub
+and /etc/grub.d/* files or please file a bug report with
+/boot/grub/grub.cfg.new file attached.
+```
+
