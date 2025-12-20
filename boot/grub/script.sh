@@ -1,8 +1,6 @@
-#!/bin/bash
-
 hostname=tester2
 username=null
-password=1511
+password=1511 
 timezone=Asia/Jakarta
 drivpath=/dev/sda
 efispath=/dev/sda5
@@ -10,6 +8,7 @@ bootpath=/dev/sda6
 procpath=/dev/sda7
 swappath=/dev/sda8
 homepath=/dev/sda9
+
 
 # root partition
 
@@ -63,13 +62,13 @@ arch-chroot /mnt timedatectl show-timesync --all &&
 
 # locale
 
-arch-chroot /mnt sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8' /mnt/etc/locale.gen &&
+arch-chroot /mnt sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /mnt/etc/locale.gen &&
 arch-chroot /mnt locale-gen &&
 
 # user
 
 arch-chroot /mnt useradd -m $username &&
-arch-chroot /mnt echo $password | passwd $username --stdin &&
+arch-chroot /mnt "echo $username:$password" | chpasswd &&
 echo "$username ALL=(ALL:ALL) ALL" > /mnt/etc/sudoers.d/nologin &&
 
 # grub

@@ -15,3 +15,8 @@ install grub
 konfigurasi mkinitcpio
 penambahan entries
 generate grub
+
+## eror
+sed: -e expression #1, char39: unterminated 's' command (solved)
+passwd: user 'null' does not exist (solved)
+echo: write error: broken pipe (solved)
