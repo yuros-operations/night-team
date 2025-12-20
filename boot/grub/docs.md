@@ -23,4 +23,5 @@ passwd: user 'null' does not exist (solved)
 echo: write error: broken pipe (solved)  
 
 ## uji joba script v.0.0.3
-grub belum tergenerate
+rhasil: grub belum tergenerate
+
