@@ -21,8 +21,7 @@ mkdir -p /mnt/boot &&
 mount $bootpath /mnt/boot
 
 # efi partition
-mkdir -p /mnt/boot/efi &&
-mount $efispath /mnt/boot/efi
+
 
 # swap partition
 
