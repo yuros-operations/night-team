@@ -11,100 +11,203 @@ homepath=/dev/sda9
 
 
 # root partition
+function create_proc {
+    yes | mkfs.ext4 $procpath &&
+    mount $procpath /mnt
+}
 
-yes | mkfs.ext4 $procpath &&
-mount $procpath /mnt &&
 
 # linux partition
-
-yes | mkfs.ext4 $bootpath &&
-mkdir -p /mnt/boot &&
-mount $bootpath /mnt/boot &&
-
-# efi partition
-
+function create_boot {
+    yes | mkfs.ext4 $bootpath &&
+    mkdir -p /mnt/boot &&
+    mount $bootpath /mnt/boot   
+}
 
 # swap partition
+function create_swap {
+    mkswap $swappath &&
+    swapon $swappath
+}
 
-mkswap $swappath &&
-swapon $swappath &&
 
 # home partition
+function create_home {
+    yes | mkfs.ext4 $homepath &&
+    mkdir -p /mnt/home &&
+    mount $homepath /mnt/home
+}
 
-yes | mkfs.ext4 $homepath &&
-mkdir -p /mnt/home &&
-mount $homepath /mnt/home &&
 
 # package
+function packages {
+    pacstrap /mnt base base-devel neovim linux-zen linux-firmware intel-ucode mkinitcpio efibootmgr os-prober grub iwd intel-ucode --noconfirm &&
+    genfstab -U /mnt >> /mnt/etc/fstab
+}
 
-pacstrap /mnt base base-devel neovim linux-zen linux-firmware intel-ucode mkinitcpio efibootmgr os-prober grub iwd intel-ucode --noconfirm &&
-genfstab -U /mnt >> /mnt/etc/fstab &&
 
 # network
+function network {
+    cp /etc/systemd/network/* /mnt/etc/systemd/network &&
+    mkdir -p /mnt/var/lib/iwd &&
+    cp /var/lib/iwd/*.psk /mnt/var/lib/iwd
+}
 
-cp /etc/systemd/network/* /mnt/etc/systemd/network &&
-mkdir -p /mnt/var/lib/iwd &&
-cp /var/lib/iwd/*.psk /mnt/var/lib/iwd &&
 
 # hostname
+function hostname {
+    echo "$hostname" > /mnt/etc/hostname
+}
 
-echo "$hostname" > /mnt/etc/hostname &&
 
 # time
-
-arch-chroot /mnt ln -sf /usr/share/zoneinfo/$timezone /mnt/etc/localtime &&
-arch-chroot /mnt hwclock --systohc &&
-arch-chroot /mnt timedatectl set-ntp true &&
-arch-chroot /mnt timedatectl set-timezone $timezone &&
-arch-chroot /mnt timedatectl status &&
-arch-chroot /mnt timedatectl show-timesync --all &&
+function gentime {
+    arch-chroot /mnt ln -sf /usr/share/zoneinfo/$timezone /mnt/etc/localtime &&
+    arch-chroot /mnt hwclock --systohc &&
+    arch-chroot /mnt timedatectl set-ntp true &&
+    arch-chroot /mnt timedatectl set-timezone $timezone &&
+    arch-chroot /mnt timedatectl status &&
+    arch-chroot /mnt timedatectl show-timesync --all
+}
 
 
 # locale
+function locale {
+    arch-chroot /mnt sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /mnt/etc/locale.gen &&
+    arch-chroot /mnt locale-gen
+}
 
-arch-chroot /mnt sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /mnt/etc/locale.gen &&
-arch-chroot /mnt locale-gen &&
 
 # user
+function user {
+    arch-chroot /mnt useradd -m $username &&
+    arch-chroot /mnt "echo $username:$password" | chpasswd &&
+    echo "$username ALL=(ALL:ALL) ALL" > /mnt/etc/sudoers.d/nologin
+}
 
-arch-chroot /mnt useradd -m $username &&
-arch-chroot /mnt "echo $username:$password" | chpasswd &&
-echo "$username ALL=(ALL:ALL) ALL" > /mnt/etc/sudoers.d/nologin &&
 
 # grub
+function grub_install {
+    arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch --modules="tpm --disable-shim-lock" &&
+    echo 'GRUB_DISABLE_OS_PROBER=false' >> /mnt/etc/default/grub
+}
 
-arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch --modules="tpm --disable-shim-lock" &&
-echo 'GRUB_DISABLE_OS_PROBER=false' >> /mnt/etc/default/grub &&
 
 # mkinitcpio
+function mkinitcpio {
+    mkdir -p /mnt/boot/kernel &&
+    rm -fr /mnt/boot/initramfs-* &&
+    mv /mnt/boot/*-ucode.img /mnt/boot/vmlinuz-linux-* /mnt/boot/kernel &&
+    mv -f /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.d/default.conf &&
+    echo "#linux zen default" > /mnt/etc/mkinitcpio.d/default.conf &&
+    export CPIOHOOK="base systemd autodetect microcode kms keyboard block filesystem fsck" &&
+    printf "MODULE=()\nBINARIES=()\nFILES=()\nHOOKS=($CPIOHOOK)" >> /mnt/etc/mkinitcpio.d/default.conf
+}
 
-mkdir -p /mnt/boot/kernel &&
-rm -fr /mnt/boot/initramfs-* &&
-mv /mnt/boot/*-ucode.img /mnt/boot/vmlinuz-linux-* /mnt/boot/kernel &&
-mv -f /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.d/default.conf &&
-echo "#linux zen default" > /mnt/etc/mkinitcpio.d/default.conf &&
-export CPIOHOOK="base systemd autodetect microcode kms keyboard block filesystem fsck" &&
-printf "MODULE=()\nBINARIES=()\nFILES=()\nHOOKS=($CPIOHOOK)" >> /mnt/etc/mkinitcpio.d/default.conf &&
 
 # efi
+function efi {
+    echo "#linux zen preset" > /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'ALL_kver="/boot/kernel/vmlinuz-linux-zen"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'default_image="/boot/initramfs-linux-zen.img"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo '#default_uki="/boot/efi/linux/arch-linux-zen.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    arch-chroot /mnt mkinitcpio -P
+}
 
-echo "#linux zen preset" > /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-echo 'ALL_kver="/boot/kernel/vmlinuz-linux-zen"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-echo '#default_uki="/boot/efi/linux/arch-linux-zen.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-arch-chroot /mnt mkinitcpio -P &&
 
 # entries
-
-cat << EOF >> /mnt/etc/grub.d/40_custom
-menuentry "Arch Linux" {
-    linux /kernel/vmlinuz-linux-zen root=UUID=$(blkid -s UUID -o value $procpath)
-    initrd /kernel/intel-ucode.img
-    initrd /initramfs-linux-zen.img
+function entries {
+    echo "menuentry "Arch Linux" {" > /mnt/etc/grub.d/40_custom &&
+    echo "    linux /kernel/vmlinuz-linux-zen root=UUID=$(blkid -s UUID -o value $procpath)" >> /mnt/etc/grub.d/40_custom &&
+    echo "    initrd /kernel/intel-ucode.img" >> /mnt/etc/grub.d/40_custom &&
+    echo "    initrd /initramfs-linux-zen.img" >> /mnt/etc/grub.d/40_custom &&
+    echo "}" >> /mnt/etc/grub.d/40_custom
 }
-EOF &&
+
 
 # generate grub
+function gen_grub {
+    arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+}
 
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+
+function runscript {
+    echo "configure proc"
+    create_proc
+    clear &&
+    sleep 2
+
+    echo "configure boot"
+    create_boot
+    clear &&
+    sleep 2
+
+    echo "configure swap"
+    create_swap
+    clear &&
+    sleep 2
+
+    echo "configure home"
+    create_home
+    clear &&
+    sleep 2
+
+    echo "installing packages"
+    packages
+    clear &&
+    sleep 2
+
+    echo "configure network"
+    network
+    clear &&
+    sleep 2
+
+    echo "configure hosname"
+    hostname
+    clear &&
+    sleep 2    
+
+    echo "configure time"
+    gentime
+    clear &&
+    sleep 2
+
+    echo "configure locale"
+    locale
+    clear &&
+    sleep 2
+
+    echo "configure user"
+    user
+    clear &&
+    sleep 2
+
+    echo "generate grub"
+    grub_install
+    clear &&
+    sleep 2
+
+    echo "configure mkinitcpio"
+    mkinitcpio
+    clear &&
+    sleep 2
+
+    echo "configure efi"
+    efi
+    clear &&
+    sleep 2
+
+    echo "configure entries"
+    entries
+    clear &&
+    sleep 2
+
+    echo "configure grub boot"
+    gen_grub
+    clear &&
+    sleep 2
+}
+
+runscript
