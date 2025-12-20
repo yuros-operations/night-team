@@ -1,3 +1,5 @@
+#!/bin/bash
+
 hostname=tester2
 username=null
 password=1511
