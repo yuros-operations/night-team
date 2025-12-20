@@ -1,4 +1,4 @@
-# pseudocode dualboot-grub
+## pseudocode dualboot-grub
 format root  
 mounting root  
 format boot  
@@ -19,4 +19,8 @@ generate grub
 ## eror
 sed: -e expression #1, char39: unterminated 's' command (solved)  
 passwd: user 'null' does not exist (solved)  
+
 echo: write error: broken pipe (solved)  
+
+## uji joba script v.0.0.3
+grub belum tergenerate
