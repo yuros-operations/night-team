@@ -19,7 +19,7 @@ function create_proc {
 
 # linux partition
 function create_boot {
-    yes | mkfs.ext4 $bootpath &&
+    yes | mkfs.vfat -F32 $bootpath &&
     mkdir -p /mnt/boot &&
     mount $bootpath /mnt/boot   
 }
@@ -119,11 +119,13 @@ function efi {
 
 # entries
 function entries {
-    echo "menuentry "Arch Linux" {" > /mnt/etc/grub.d/40_custom &&
+    echo "#!/bin/bash"
+    echo "menuentry Arch linux {" >> /mnt/etc/grub.d/40
     echo "    linux /kernel/vmlinuz-linux-zen root=UUID=$(blkid -s UUID -o value $procpath)" >> /mnt/etc/grub.d/40_custom &&
     echo "    initrd /kernel/intel-ucode.img" >> /mnt/etc/grub.d/40_custom &&
     echo "    initrd /initramfs-linux-zen.img" >> /mnt/etc/grub.d/40_custom &&
     echo "}" >> /mnt/etc/grub.d/40_custom
+    chmod +x /mnt/etc/grub.d/40_custom
 }
 
 
@@ -209,5 +211,6 @@ function runscript {
     clear &&
     sleep 2
 }
+
 
 runscript
