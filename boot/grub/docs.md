@@ -63,3 +63,9 @@ and /etc/grub.d/* files or please file a bug report with
 /boot/grub/grub.cfg.new file attached.
 ```
 
+## uji coba script v0.0.6
+hasil: 
+1. linux berhasil booting
+2. windows tidak terbaca pada boot menu
+3. user tidak bisa masuk karena password belum terbuat
+
