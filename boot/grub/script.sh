@@ -134,9 +134,14 @@ menuentry "Arch efi single boot" {
         search --no-floppy --set=root --file /efi/linux/arch-linux-zen.efi
         chainloader /efi/linux/arch-linux-zen.efi
 }
+# entries with initramfs
+menuentry "Arch-zen" {
+    linux /kernel/vmlinuz-linux-zen
+    initrd /kernel/intel-ucode.img
+    initrd /initramfs-linux-zen.img
+}
 EOF
 }
-
 
 # generate grub
 function gen_grub {
@@ -228,5 +233,6 @@ function runscript {
 
 
 runscript
+
 
 
