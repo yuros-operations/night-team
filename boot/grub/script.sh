@@ -104,7 +104,6 @@ function cmdline {
 function mkinitcpio {
     mkdir -p /mnt/boot/kernel &&
     mkdir -p /mnt/boot/efi/linux &&
-    rm -fr /mnt/boot/initramfs-* &&
     mv /mnt/boot/*-ucode.img /mnt/boot/vmlinuz-linux-* /mnt/boot/kernel &&
     mv -f /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.d/default.conf &&
     echo "#linux zen default" > /mnt/etc/mkinitcpio.d/default.conf &&
@@ -233,6 +232,7 @@ function runscript {
 
 
 runscript
+
 
 
 
