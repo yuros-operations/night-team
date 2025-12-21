@@ -85,6 +85,15 @@ hasil:
 1. tidak berhasil booting
 2. time out waiting for device /dev/gpt-auto-root
 
+## uji coba script v0.0.8
+1. menambahkan function cmdline ke dalam script
+
+hasil: 
+1. tidak berhasil booting
+2. function cmdline tidak berjalan
+
+
+
 
 
 
