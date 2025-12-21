@@ -93,6 +93,12 @@ function grub_install {
 
 }
 
+#cmdline
+function cmdline {
+    mkdir -p /etc/cmdline.d
+    touch /etc/cmdline.d/{01-boot.conf,02-mods.conf,03-secs.conf,04-perf.conf,05-misc.conf}
+    echo "root=UUID=$(blkid -s UUID -o value $procpath)" > /etc/cmdline.d/01-boot.conf
+}
 
 # mkinitcpio
 function mkinitcpio {
@@ -193,6 +199,11 @@ function runscript {
     clear &&
     sleep 2
 
+    echo "configure cmdline"
+    cmdline
+    clear &&
+    sleep 2
+
     echo "configure mkinitcpio"
     mkinitcpio
     clear &&
@@ -216,4 +227,5 @@ function runscript {
 
 
 runscript
+
 
