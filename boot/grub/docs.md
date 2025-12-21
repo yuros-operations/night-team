@@ -76,12 +76,15 @@ hasil:
 menuentry "Arch efi single boot" {
     insmod fat
     insmod chain
-    search --no-floppy --set=root --file /efi/linux
-    chainloader /EFI/Archlinux/arch-linux-zen.efi
+    search --no-floppy --set=root --file /efi/linux/arch-linux-zen.efi
+    chainloader /efi/linux/arch-linux-zen.efi
 }
 ```
 
 hasil: 
+1. tidak berhasil booting
+2. time out waiting for device /dev/gpt-auto-root
+
 
 
 
