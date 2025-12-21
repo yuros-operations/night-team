@@ -110,7 +110,7 @@ hasil:
 2. time out waiting for device /dev/gpt-auto-root
 3. /kernel/intel-ucode.img not found
 
-## uji coba script v0.0.11
+## uji coba script v0.0.12
 ```
 menuentry "Arch-zen" {
     linux /kernel/vmlinuz-linux-zen
@@ -122,7 +122,17 @@ hasil:
 1. tidak berhasil booting
 2. time out waiting for device /dev/gpt-auto-root
 
-
+## uji coba script v0.0.13
+```
+menuentry "Arch-zen" {
+    linux /kernel/vmlinuz-linux-zen
+    initrd /kernel/amd-ucode.img
+    initrd /initramfs-linux-zen.img root=$procpath rw
+}
+```
+hasil:
+1. tidak berhasil booting
+2. invalid file name 'root=/dev/sda2 rw'
 
 
 
