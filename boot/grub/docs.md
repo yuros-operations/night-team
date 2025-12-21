@@ -134,5 +134,15 @@ hasil:
 1. tidak berhasil booting
 2. invalid file name 'root=/dev/sda2 rw'
 
+## uji coba script v0.0.14
+```
+menuentry "Arch-zen" {
+    linux /kernel/vmlinuz-linux-zen root=$procpath rw
+    initrd /kernel/amd-ucode.img
+    initrd /initramfs-linux-zen.img 
+}
+```
+hasil : 
+1. berhasil booting
 
 
