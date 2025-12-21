@@ -95,19 +95,20 @@ function grub_install {
 
 #cmdline
 function cmdline {
-    mkdir -p /etc/cmdline.d
-    touch /etc/cmdline.d/{01-boot.conf,02-mods.conf,03-secs.conf,04-perf.conf,05-misc.conf}
-    echo "root=UUID=$(blkid -s UUID -o value $procpath)" > /etc/cmdline.d/01-boot.conf
+    mkdir -p /mnt/etc/cmdline.d &&
+    touch /mnt/etc/cmdline.d/{01-boot.conf,02-mods.conf,03-secs.conf,04-perf.conf,05-misc.conf} &&
+    echo "root=UUID=$(blkid -s UUID -o value $procpath)" > /mnt/etc/cmdline.d/01-boot.conf
 }
 
 # mkinitcpio
 function mkinitcpio {
     mkdir -p /mnt/boot/kernel &&
+    mkdir -p /mnt/boot/efi/linux &&
     rm -fr /mnt/boot/initramfs-* &&
     mv /mnt/boot/*-ucode.img /mnt/boot/vmlinuz-linux-* /mnt/boot/kernel &&
     mv -f /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.d/default.conf &&
     echo "#linux zen default" > /mnt/etc/mkinitcpio.d/default.conf &&
-    export CPIOHOOK="base systemd autodetect microcode kms keyboard block filesystem fsck" &&
+    export CPIOHOOK="base systemd autodetect microcode kms keyboard block filesystems fsck" &&
     printf "MODULE=()\nBINARIES=()\nFILES=()\nHOOKS=($CPIOHOOK)" >> /mnt/etc/mkinitcpio.d/default.conf
 }
 
