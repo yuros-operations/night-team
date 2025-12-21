@@ -72,9 +72,17 @@ hasil:
 
 ## uji coba script v0.0.7
 ```/etc/grub.d/40_custom
-insmod fat
-    search --no-floppy --set=root --fs-uuid <UUID_PARTISI_EFI>
-    chainloader /EFI/Linux/arch-linux-zen.efi
+
+menuentry "Arch efi" {
+    insmod fat
+    insmod chain
+    # Cari partisi EFI (ESP) berdasarkan UUID
+    search --no-floppy --fs-uuid --set=root 7696-558C
+    # Eksekusi file .efi secara langsung
+    chainloader /EFI/Archlinux/arch-linux-zen.efi
+}
+
 ```
 hasil: 
 1. tidak ditemukan file /boot/efi/EFI/Linux/arch-linux-zen.efi
+
