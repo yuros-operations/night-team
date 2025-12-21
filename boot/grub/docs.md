@@ -92,7 +92,7 @@ hasil:
 1. tidak berhasil booting
 2. function cmdline tidak berjalan
 
-## uji coba script v0.0.9
+## uji coba script v0.0.11
 ```
 nvim /etc/grub.d/40_custom
 ```
@@ -108,8 +108,19 @@ menuentry "Arch-zen" {
 hasil: 
 1. tidak berhasil booting
 2. time out waiting for device /dev/gpt-auto-root
+3. /kernel/intel-ucode.img not found
 
-
+## uji coba script v0.0.11
+```
+menuentry "Arch-zen" {
+    linux /kernel/vmlinuz-linux-zen
+    initrd /kernel/amd-ucode.img
+    initrd /initramfs-linux-zen.img
+}
+```
+hasil: 
+1. tidak berhasil booting
+2. time out waiting for device /dev/gpt-auto-root
 
 
 
