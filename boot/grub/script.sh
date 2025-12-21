@@ -135,9 +135,9 @@ menuentry "Arch efi single boot" {
 }
 # entries with initramfs
 menuentry "Arch-zen" {
-    linux /kernel/vmlinuz-linux-zen
+    linux /kernel/vmlinuz-linux-zen root=$procpath rw
     initrd /kernel/amd-ucode.img
-    initrd /initramfs-linux-zen.img root=$procpath rw
+    initrd /initramfs-linux-zen.img 
 }
 EOF
 }
@@ -232,6 +232,7 @@ function runscript {
 
 
 runscript
+
 
 
 
