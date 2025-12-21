@@ -112,8 +112,8 @@ function efi {
     echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     echo 'ALL_kver="/boot/kernel/vmlinuz-linux-zen"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo 'default_image="/boot/initramfs-linux-zen.img"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo '#default_uki="/boot/efi/linux/arch-linux-zen.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo '#default_image="/boot/initramfs-linux-zen.img"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'default_uki="/boot/efi/linux/arch-linux-zen.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     arch-chroot /mnt mkinitcpio -P
 }
 
@@ -121,10 +121,11 @@ function efi {
 # entries
 function entries {
 cat << EOF >> /mnt/etc/grub.d/40_custom
-menuentry "Arch Linux" {
-   linux /kernel/vmlinuz-linux-zen root=UUID=$(blkid -s UUID -o value $procpath)
-   initrd /kernel/amd-ucode.img
-   initrd /initramfs-linux-zen.img
+menuentry "Arch efi single boot" {
+        insmod fat
+        insmod chain
+        search --no-floppy --set=root --file /efi/linux/arch-linux-zen.efi
+        chainloader /efi/linux/arch-linux-zen.efi
 }
 EOF
 }
@@ -215,3 +216,4 @@ function runscript {
 
 
 runscript
+
