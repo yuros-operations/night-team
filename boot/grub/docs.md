@@ -15,7 +15,7 @@ install grub
 konfigurasi mkinitcpio  
 penambahan entries  
 generate grub
-grub config efi kernel grub
+grub config uefi grub single boot
   
 ## eror
 sed: -e expression #1, char39: unterminated 's' command (solved)  
@@ -73,16 +73,15 @@ hasil:
 ## uji coba script v0.0.7
 ```/etc/grub.d/40_custom
 
-menuentry "Arch efi" {
+menuentry "Arch efi single boot" {
     insmod fat
     insmod chain
-    # Cari partisi EFI (ESP) berdasarkan UUID
-    search --no-floppy --fs-uuid --set=root 7696-558C
-    # Eksekusi file .efi secara langsung
+    search --no-floppy --set=root --file /efi/linux
     chainloader /EFI/Archlinux/arch-linux-zen.efi
 }
-
 ```
+
 hasil: 
-1. tidak ditemukan file /boot/efi/EFI/Linux/arch-linux-zen.efi
+
+
 
