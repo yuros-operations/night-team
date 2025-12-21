@@ -14,7 +14,8 @@ buat user
 install grub  
 konfigurasi mkinitcpio  
 penambahan entries  
-generate grub  
+generate grub
+grub config efi kernel grub
   
 ## eror
 sed: -e expression #1, char39: unterminated 's' command (solved)  
@@ -69,3 +70,11 @@ hasil:
 2. windows tidak terbaca pada boot menu
 3. user tidak bisa masuk karena password belum terbuat
 
+## uji coba script v0.0.7
+```/etc/grub.d/40_custom
+insmod fat
+    search --no-floppy --set=root --fs-uuid <UUID_PARTISI_EFI>
+    chainloader /EFI/Linux/arch-linux-zen.efi
+```
+hasil: 
+1. tidak ditemukan file /boot/efi/EFI/Linux/arch-linux-zen.efi
