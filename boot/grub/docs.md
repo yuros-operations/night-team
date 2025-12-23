@@ -145,4 +145,18 @@ menuentry "Arch-zen" {
 hasil : 
 1. berhasil booting
 
+## uji coba script v0.0.15
+```
+function create_efis {
+    mkdir -p /mnt/boot/efi &&
+    mount $efispath /mnt/boot/efi
+}
+```
 
+```
+function grub_install {
+    arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch  &&
+    echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub
+
+}
+```

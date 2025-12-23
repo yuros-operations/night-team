@@ -3,11 +3,11 @@ username=null
 password=1511 
 timezone=Asia/Jakarta
 drivpath=/dev/sda
-efispath=
-bootpath=/dev/sda5
-procpath=/dev/sda6
-swappath=/dev/sda7
-homepath=/dev/sda8
+efispath=/dev/sda1
+bootpath=/dev/sda4
+procpath=/dev/sda5
+swappath=/dev/sda6
+homepath=/dev/sda7
 
 
 # root partition
@@ -19,9 +19,15 @@ function create_proc {
 
 # linux partition
 function create_boot {
-    yes | mkfs.vfat -F32 $bootpath &&
+    yes | mkfs.ext4 $bootpath &&
     mkdir -p /mnt/boot &&
     mount $bootpath /mnt/boot   
+}
+
+# efi partition
+function create_efis {
+    mkdir -p /mnt/boot/efi &&
+    mount $efispath /mnt/boot/efi
 }
 
 # swap partition
@@ -88,7 +94,7 @@ function user {
 
 # grub
 function grub_install {
-    arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch  &&
+    arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch  &&
     echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub
 
 }
@@ -125,21 +131,21 @@ function efi {
 
 
 # entries
-function entries {
-cat << EOF >> /mnt/etc/grub.d/40_custom
-menuentry "Arch efi single boot" {
-        insmod fat
-        insmod chain
-        search --no-floppy --set=root --file /efi/linux/arch-linux-zen.efi
-        chainloader /efi/linux/arch-linux-zen.efi
+#function entries {
+#cat << EOF >> /mnt/etc/grub.d/40_custom
+#menuentry "Arch efi single boot" {
+#        insmod fat
+#        insmod chain
+#        search --no-floppy --set=root --file /efi/linux/arch-linux-zen.efi
+#        chainloader /efi/linux/arch-linux-zen.efi
 }
 # entries with initramfs
-menuentry "Arch-zen" {
-    linux /kernel/vmlinuz-linux-zen root=$procpath rw
-    initrd /kernel/amd-ucode.img
-    initrd /initramfs-linux-zen.img 
+#menuentry "Arch-zen" {
+#    linux /kernel/vmlinuz-linux-zen root=$procpath rw
+#    initrd /kernel/amd-ucode.img
+#    initrd /initramfs-linux-zen.img 
 }
-EOF
+#EOF
 }
 
 # generate grub
