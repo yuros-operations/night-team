@@ -160,3 +160,28 @@ function grub_install {
 
 }
 ```
+hasil :
+1. efi tidak termounting
+2. entries arch tidak muncul
+
+## uji coba script v0.0.16
+uncomment
+```
+function entries {
+cat << EOF >> /mnt/etc/grub.d/40_custom
+menuentry "Arch efi single boot" {
+        insmod fat
+        insmod chain
+        search --no-floppy --set=root --file /efi/linux/arch-linux-zen.efi
+        chainloader /efi/linux/arch-linux-zen.efi
+}
+```
+
+```
+echo "configure efi"
+    create_efis
+    clear &&
+    sleep 2
+```
+
+hasil :

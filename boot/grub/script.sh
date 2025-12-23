@@ -131,13 +131,13 @@ function efi {
 
 
 # entries
-#function entries {
-#cat << EOF >> /mnt/etc/grub.d/40_custom
-#menuentry "Arch efi single boot" {
-#        insmod fat
-#        insmod chain
-#        search --no-floppy --set=root --file /efi/linux/arch-linux-zen.efi
-#        chainloader /efi/linux/arch-linux-zen.efi
+function entries {
+cat << EOF >> /mnt/etc/grub.d/40_custom
+menuentry "Arch efi single boot" {
+        insmod fat
+        insmod chain
+        search --no-floppy --set=root --file /efi/linux/arch-linux-zen.efi
+        chainloader /efi/linux/arch-linux-zen.efi
 }
 # entries with initramfs
 #menuentry "Arch-zen" {
@@ -145,7 +145,7 @@ function efi {
 #    initrd /kernel/amd-ucode.img
 #    initrd /initramfs-linux-zen.img 
 }
-#EOF
+EOF
 }
 
 # generate grub
@@ -162,6 +162,11 @@ function runscript {
 
     echo "configure boot"
     create_boot
+    clear &&
+    sleep 2
+
+    echo "configure efi"
+    create_efis
     clear &&
     sleep 2
 
