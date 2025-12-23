@@ -185,3 +185,7 @@ echo "configure efi"
 ```
 
 hasil :
+1. entries arch muncul
+2. arch tidak booting
+
+## uji coba script v0.0.17
