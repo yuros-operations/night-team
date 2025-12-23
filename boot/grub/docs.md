@@ -189,3 +189,5 @@ hasil :
 2. arch tidak booting
 
 ## uji coba script v0.0.17
+hasil :
+error masih sama dengan percobaan sebelumnya
