@@ -199,3 +199,6 @@ error masih sama dengan percobaan sebelumnya
 indikasi error: 
 1. memerlukan package ntfs-3g
 2. mounting file efi windows
+
+## uji coba script v0.0.18
+hasil:success boot with grub and efi file
