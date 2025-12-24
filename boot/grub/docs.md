@@ -209,6 +209,11 @@ hasil:
    - /boot/efi/EFI/linux
   
 ## uji coba script v0.0.19
-file efi menggunakan windows saja
+partisi efi menggunakan windows saja
+
+hasil:
+1. berhasil booting
+2. folder efi hanya terbuat sekali tidak dua kali
+
 
 
