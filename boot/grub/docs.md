@@ -190,4 +190,12 @@ hasil :
 
 ## uji coba script v0.0.17
 hasil :
+
 error masih sama dengan percobaan sebelumnya
+
+
+## grub dual boot
+
+indikasi error: 
+1. memerlukan package ntfs-3g
+2. mounting file efi windows
