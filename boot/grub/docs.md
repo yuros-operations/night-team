@@ -201,4 +201,8 @@ indikasi error:
 2. mounting file efi windows
 
 ## uji coba script v0.0.18
-hasil:success boot with grub and efi file
+hasil:
+1. success boot with grub and efi file
+2. ada dua file .efi
+   - /boot/efi/linux
+   - /boot/efi/EFI/linux
