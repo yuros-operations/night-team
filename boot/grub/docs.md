@@ -16,6 +16,7 @@ konfigurasi mkinitcpio
 penambahan entries  
 generate grub
 grub config uefi grub single boot
+grub config uefi grub dual boot windows
   
 ## eror
 sed: -e expression #1, char39: unterminated 's' command (solved)  
@@ -206,3 +207,7 @@ hasil:
 2. ada dua file .efi
    - /boot/efi/linux
    - /boot/efi/EFI/linux
+  
+## uji coba script v0.0.19
+
+
