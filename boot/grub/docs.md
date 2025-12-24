@@ -209,5 +209,6 @@ hasil:
    - /boot/efi/EFI/linux
   
 ## uji coba script v0.0.19
+file efi menggunakan windows saja
 
 
