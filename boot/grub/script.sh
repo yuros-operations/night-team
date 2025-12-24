@@ -148,7 +148,7 @@ menuentry "Arch efi dual boot" {
         insmod fat
         insmod chain
         search --no-floppy --set=root --file /EFI/linux/arch-linux-zen.efi 
-        chainloader /linux/arch-linux-zen.efi
+        chainloader /EFI/linux/arch-linux-zen.efi
 }
 EOF
 }
@@ -248,6 +248,7 @@ function runscript {
 
 
 runscript
+
 
 
 
