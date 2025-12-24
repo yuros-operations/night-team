@@ -148,6 +148,7 @@ function mkinitcpiod {
 function grub-mv {
     mkdir -p /mnt/boot/EFI/Arch
     mv /mnt/boot/EFI/EFI/Arch/grubx64.efi /mnt/boot/EFI/Arch
+    rm -fr /mnt/boot/EFI/EFI
 }
 
 
@@ -311,6 +312,7 @@ function runscript {
 
 
 runscript
+
 
 
 
