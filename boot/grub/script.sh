@@ -30,6 +30,13 @@ function create_efis {
     mount $efispath /mnt/boot/efi
 }
 
+# efi partition (partition efi in windows only)
+# don't create the partition for linux
+function create_efid {
+    mkdir -p /mnt/boot &&
+    mount $efispath /mnt/boot
+}
+
 # swap partition
 function create_swap {
     mkswap $swappath &&
@@ -99,6 +106,13 @@ function grub_install {
 
 }
 
+# grub
+function grub_installw {
+    arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch  &&
+    echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub
+
+}
+
 #cmdline
 function cmdline {
     mkdir -p /mnt/etc/cmdline.d &&
@@ -127,6 +141,17 @@ function efi {
     echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     echo '#default_image="/boot/initramfs-linux-zen.img"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset && 
     echo 'default_uki="/boot/efi/EFI/linux/arch-linux-zen.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    arch-chroot /mnt mkinitcpio -P
+}
+
+# efi
+function efi-windows {
+    echo "#linux zen preset" > /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'ALL_kver="/boot/kernel/vmlinuz-linux-zen"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo '#default_image="/boot/initramfs-linux-zen.img"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset && 
+    echo 'default_uki="/boot/EFI/linux/arch-linux-zen.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     arch-chroot /mnt mkinitcpio -P
 }
 
@@ -165,13 +190,18 @@ function runscript {
     clear &&
     sleep 2
 
-    echo "configure boot"
-    create_boot
-    clear &&
-    sleep 2
+    #echo "configure boot"
+    #create_boot
+    #clear &&
+    #sleep 2
 
-    echo "configure efi"
-    create_efis
+    #echo "configure efi"
+    #create_efis
+    #clear &&
+    #sleep 2
+
+    echo "configure efi on windows"
+    create_efid
     clear &&
     sleep 2
 
@@ -230,8 +260,13 @@ function runscript {
     clear &&
     sleep 2
 
-    echo "configure efi"
-    efi
+    #echo "configure efi"
+    #efi
+    #clear &&
+    #sleep 2
+
+    echo "configure efi on windows"
+    efi-windows
     clear &&
     sleep 2
 
@@ -248,6 +283,7 @@ function runscript {
 
 
 runscript
+
 
 
 
