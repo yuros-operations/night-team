@@ -4,10 +4,10 @@ password=1511
 timezone=Asia/Jakarta
 drivpath=/dev/sda
 efispath=/dev/sda1
-bootpath=/dev/sda4
-procpath=/dev/sda5
-swappath=/dev/sda6
-homepath=/dev/sda7
+#bootpath=/dev/sda4
+procpath=/dev/sda4
+swappath=/dev/sda5
+homepath=/dev/sda6
 
 
 # root partition
@@ -106,7 +106,7 @@ function grub_install {
 
 }
 
-# grub
+# grub efi on windows
 function grub_installw {
     arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch  &&
     echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub
@@ -132,6 +132,24 @@ function mkinitcpio {
     printf "MODULE=()\nBINARIES=()\nFILES=()\nHOOKS=($CPIOHOOK)" >> /mnt/etc/mkinitcpio.d/default.conf
 }
 
+# mkinitcpio with efi on windows
+function mkinitcpiod {
+    mkdir -p /mnt/boot/kernel &&
+    mkdir -p /mnt/boot/EFI/linux &&
+    rm /mnt/boot/initramfs-* &&
+    mv /mnt/boot/*-ucode.img /mnt/boot/vmlinuz-linux-* /mnt/boot/kernel &&
+    mv -f /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.d/default.conf &&
+    echo "#linux zen default" > /mnt/etc/mkinitcpio.d/default.conf &&
+    export CPIOHOOK="base systemd autodetect microcode kms keyboard block filesystems fsck" &&
+    printf "MODULE=()\nBINARIES=()\nFILES=()\nHOOKS=($CPIOHOOK)" >> /mnt/etc/mkinitcpio.d/default.conf
+}
+
+# moving file efi grub
+function grub-mv {
+    mkdir -p /mnt/boot/EFI/Arch
+    mv /mnt/boot/EFI/EFI/Arch/grubx64.efi /mnt/boot/EFI/Arch
+}
+
 
 # efi
 function efi {
@@ -144,7 +162,7 @@ function efi {
     arch-chroot /mnt mkinitcpio -P
 }
 
-# efi
+# efi on partition windows
 function efi-windows {
     echo "#linux zen preset" > /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
@@ -255,8 +273,18 @@ function runscript {
     clear &&
     sleep 2
 
-    echo "configure mkinitcpio"
-    mkinitcpio
+    #echo "configure mkinitcpio"
+    #mkinitcpio
+    #clear &&
+    #sleep 2
+
+    echo "configure mkinitcpiod"
+    mkinitcpiod
+    clear &&
+    sleep 2
+
+    echo "configure file efi"
+    grub-mv
     clear &&
     sleep 2
 
@@ -283,6 +311,7 @@ function runscript {
 
 
 runscript
+
 
 
 
