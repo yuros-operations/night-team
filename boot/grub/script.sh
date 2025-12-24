@@ -47,7 +47,7 @@ function create_home {
 
 # package
 function packages {
-    pacstrap /mnt base base-devel neovim linux-zen linux-firmware amd-ucode mkinitcpio efibootmgr os-prober grub iwd --noconfirm &&
+    pacstrap /mnt base base-devel neovim linux-zen linux-firmware amd-ucode mkinitcpio efibootmgr os-prober grub iwd ntfs-3g --noconfirm &&
     genfstab -U /mnt >> /mnt/etc/fstab
 }
 
@@ -130,8 +130,18 @@ function efi {
     arch-chroot /mnt mkinitcpio -P
 }
 
+# entries with initramfs
+function entries_initramfs {
+cat << EOF >> /mnt/etc/grub.d/40_custom
+menuentry "Arch-zen" {
+    linux /kernel/vmlinuz-linux-zen root=$procpath rw
+    initrd /kernel/amd-ucode.img
+    initrd /initramfs-linux-zen.img 
+}
+EOF
+}
 
-# entries
+# entries with efi
 function entries {
 cat << EOF >> /mnt/etc/grub.d/40_custom
 menuentry "Arch efi dual boot" {
@@ -139,12 +149,6 @@ menuentry "Arch efi dual boot" {
         insmod chain
         search --no-floppy --set=root --file /EFI/linux/arch-linux-zen.efi
         chainloader /EFI/linux/arch-linux-zen.efi
-}
-# entries with initramfs
-#menuentry "Arch-zen" {
-#    linux /kernel/vmlinuz-linux-zen root=$procpath rw
-#    initrd /kernel/amd-ucode.img
-#    initrd /initramfs-linux-zen.img 
 }
 EOF
 }
