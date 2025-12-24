@@ -109,7 +109,8 @@ function cmdline {
 # mkinitcpio
 function mkinitcpio {
     mkdir -p /mnt/boot/kernel &&
-    mkdi    mkdir -p /mnt/boot/efi/EFI/linux &&/mnt/boot/initramfs-* &&
+    mkdir -p /mnt/boot/efi/EFI/linux &&
+    rm /mnt/boot/initramfs-* &&
     mv /mnt/boot/*-ucode.img /mnt/boot/vmlinuz-linux-* /mnt/boot/kernel &&
     mv -f /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.d/default.conf &&
     echo "#linux zen default" > /mnt/etc/mkinitcpio.d/default.conf &&
@@ -124,8 +125,9 @@ function efi {
     echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     echo 'ALL_kver="/boot/kernel/vmlinuz-linux-zen"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo '#default_image="/boot/initramfs-linux-zen.img"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo    echo 'default_uki="/boot/efi/EFI/linux/arch-linux-zen.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&h-chroot /mnt mkinitcpio -P
+    echo '#default_image="/boot/initramfs-linux-zen.img"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset && 
+    echo 'default_uki="/boot/efi/EFI/linux/arch-linux-zen.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    arch-chroot /mnt mkinitcpio -P
 }
 
 # entries with initramfs
@@ -145,7 +147,8 @@ cat << EOF >> /mnt/etc/grub.d/40_custom
 menuentry "Arch efi dual boot" {
         insmod fat
         insmod chain
-                search --no-floppy --set=root --file /EFI/linux/arch-linux-zen.efi chainloader /linux/arch-linux-zen.efi
+        search --no-floppy --set=root --file /EFI/linux/arch-linux-zen.efi 
+        chainloader /linux/arch-linux-zen.efi
 }
 EOF
 }
@@ -245,6 +248,7 @@ function runscript {
 
 
 runscript
+
 
 
 
