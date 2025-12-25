@@ -222,3 +222,9 @@ partisi efi menggunakan windows saja
 hasil:
 1. berhasil booting menggunakan initramfs
 
+## uji coba script v0.0.21
+secure boot dengan single boot
+
+hasil:
+1. security boot fail
+
