@@ -4,10 +4,10 @@ password=1511
 timezone=Asia/Jakarta
 drivpath=/dev/sda
 efispath=/dev/sda1
-#bootpath=/dev/sda4
-procpath=/dev/sda4
-swappath=/dev/sda5
-homepath=/dev/sda6
+bootpath=/dev/sda4
+procpath=/dev/sda5
+swappath=/dev/sda6
+homepath=/dev/sda7
 
 
 # root partition
@@ -18,11 +18,11 @@ function create_proc {
 
 
 # linux partition
-#function create_boot {
-#    yes | mkfs.ext4 $bootpath &&
-#    mkdir -p /mnt/boot &&
-#    mount $bootpath /mnt/boot   
-#}
+function create_boot {
+    yes | mkfs.ext4 $bootpath &&
+    mkdir -p /mnt/boot &&
+    mount $bootpath /mnt/boot   
+}
 
 # efi partition
 function create_efis {
@@ -312,6 +312,7 @@ function runscript {
 
 
 runscript
+
 
 
 
