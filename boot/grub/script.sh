@@ -54,7 +54,7 @@ function create_home {
 
 # package
 function packages {
-    pacstrap /mnt base base-devel neovim linux-zen linux-firmware amd-ucode mkinitcpio efibootmgr os-prober grub iwd ntfs-3g --noconfirm &&
+    pacstrap /mnt base base-devel neovim linux-zen linux-firmware amd-ucode mkinitcpio efibootmgr os-prober grub iwd ntfs-3g sbctl --noconfirm &&
     genfstab -U /mnt >> /mnt/etc/fstab
 }
 
@@ -202,6 +202,15 @@ function gen_grub {
     arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 }
 
+function secure {
+    sbctl create-keys &&
+    sbctl sign /boot/efi/arch/grubx64.efi &&
+    sbctl sign /boot/kernel/vmlinuz-linux-zen &&
+    sbctl sign /boot/efi/linux/arch-linux-zen.efi &&
+    sbctl sign /boot/grub/x86_64-efi/core.efi &&
+    sbctl sign /boot/grub/x86_64-efi/grub.efi
+}
+
 
 function runscript {
     echo "configure proc"
@@ -308,10 +317,16 @@ function runscript {
     gen_grub
     clear &&
     sleep 2
+
+    echo "configure secure boot"
+    secure
+    clear &&
+    sleep 2
 }
 
 
 runscript
+
 
 
 
