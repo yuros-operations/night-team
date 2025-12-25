@@ -227,4 +227,7 @@ secure boot dengan single boot
 
 hasil:
 1. security boot fail
+2. bisa masuk jika langsung menggunakn uki
+3. grub nya masih security boot fail
+
 
