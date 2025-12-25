@@ -216,4 +216,9 @@ hasil:
 2. folder efi hanya terbuat sekali tidak dua kali
 
 
+## uji coba script v0.0.20
+partisi efi menggunakan windows saja
+
+hasil:
+1. berhasil booting menggunakan initramfs
 
