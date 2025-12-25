@@ -18,11 +18,11 @@ function create_proc {
 
 
 # linux partition
-function create_boot {
-    yes | mkfs.ext4 $bootpath &&
-    mkdir -p /mnt/boot &&
-    mount $bootpath /mnt/boot   
-}
+#function create_boot {
+#    yes | mkfs.ext4 $bootpath &&
+#    mkdir -p /mnt/boot &&
+#    mount $bootpath /mnt/boot   
+#}
 
 # efi partition
 function create_efis {
@@ -312,6 +312,7 @@ function runscript {
 
 
 runscript
+
 
 
 
