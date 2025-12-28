@@ -203,12 +203,13 @@ function gen_grub {
 }
 
 function secure {
-    sbctl create-keys &&
-    sbctl sign --save /boot/efi/arch/grubx64.efi &&
-    sbctl sign --save /boot/kernel/vmlinuz-linux-zen &&
-    sbctl sign --save /boot/efi/linux/arch-linux-zen.efi &&
-    sbctl sign --save /boot/grub/x86_64-efi/core.efi &&
-    sbctl sign --save /boot/grub/x86_64-efi/grub.efi
+    arch-chroot /mnt sbctl create-keys &&
+    arch-chroot /mnt sbctl enroll-keys -m -f &&
+    arch-chroot /mnt sbctl sign --save /boot/efi/EFI/Arch/grubx64.efi &&
+    arch-chroot /mnt sbctl sign --save /boot/kernel/vmlinuz-linux-zen &&
+    arch-chroot /mnt sbctl sign --save /boot/efi/EFI/linux/arch-linux-zen.efi &&
+    arch-chroot /mnt sbctl sign --save /boot/grub/x86_64-efi/core.efi &&
+    arch-chroot /mnt sbctl sign --save /boot/grub/x86_64-efi/grub.efi
 }
 
 
@@ -326,6 +327,7 @@ function runscript {
 
 
 runscript
+
 
 
 
