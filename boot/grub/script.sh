@@ -204,11 +204,11 @@ function gen_grub {
 
 function secure {
     sbctl create-keys &&
-    sbctl sign /boot/efi/arch/grubx64.efi &&
-    sbctl sign /boot/kernel/vmlinuz-linux-zen &&
-    sbctl sign /boot/efi/linux/arch-linux-zen.efi &&
-    sbctl sign /boot/grub/x86_64-efi/core.efi &&
-    sbctl sign /boot/grub/x86_64-efi/grub.efi
+    sbctl sign --save /boot/efi/arch/grubx64.efi &&
+    sbctl sign --save /boot/kernel/vmlinuz-linux-zen &&
+    sbctl sign --save /boot/efi/linux/arch-linux-zen.efi &&
+    sbctl sign --save /boot/grub/x86_64-efi/core.efi &&
+    sbctl sign --save /boot/grub/x86_64-efi/grub.efi
 }
 
 
@@ -218,20 +218,20 @@ function runscript {
     clear &&
     sleep 2
 
-    #echo "configure boot"
-    #create_boot
-    #clear &&
-    #sleep 2
-
-    #echo "configure efi"
-    #create_efis
-    #clear &&
-    #sleep 2
-
-    echo "configure efi on windows"
-    create_efid
+    echo "configure boot"
+    create_boot
     clear &&
     sleep 2
+
+    echo "configure efi"
+    create_efis
+    clear &&
+    sleep 2
+
+        #echo "configure efi on windows"
+        #create_efid
+        #clear &&
+        #sleep 2
 
     echo "configure swap"
     create_swap
@@ -283,30 +283,30 @@ function runscript {
     clear &&
     sleep 2
 
-    #echo "configure mkinitcpio"
-    #mkinitcpio
-    #clear &&
-    #sleep 2
-
-    echo "configure mkinitcpiod"
-    mkinitcpiod
+    echo "configure mkinitcpio"
+    mkinitcpio
     clear &&
     sleep 2
 
-    echo "configure file efi"
-    grub-mv
+        #echo "configure mkinitcpiod"
+        #mkinitcpiod
+        #clear &&
+        #sleep 2
+
+        #echo "configure file efi"
+        #grub-mv
+        #clear &&
+        #sleep 2
+
+    echo "configure efi"
+    efi
     clear &&
     sleep 2
 
-    #echo "configure efi"
-    #efi
-    #clear &&
-    #sleep 2
-
-    echo "configure efi on windows"
-    efi-windows
-    clear &&
-    sleep 2
+        #echo "configure efi on windows"
+        #efi-windows
+        #clear &&
+        #sleep 2
 
     echo "configure entries"
     entries
@@ -326,6 +326,7 @@ function runscript {
 
 
 runscript
+
 
 
 
