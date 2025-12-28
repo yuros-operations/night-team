@@ -94,7 +94,7 @@ function locale {
 # user
 function user {
     arch-chroot /mnt useradd -m $username &&
-    arch-chroot /mnt "echo $username:$password" | chpasswd &&
+    arch-chroot /mnt passwd $username &&
     echo "$username ALL=(ALL:ALL) ALL" > /mnt/etc/sudoers.d/nologin
 }
 
@@ -102,15 +102,15 @@ function user {
 # grub
 function grub_install {
     arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch  &&
-    echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub
-
+    echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub &&
+    echo "GRUB_DISABLE_SUBMENU=y" >> /mnt/etc/default/grub
 }
 
 # grub efi on windows
 function grub_installw {
     arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch  --modules="tpm" --disable-shim-lock &&
-    echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub
-
+    echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub &&
+    echo "GRUB_DISABLE_SUBMENU=y" >> /mnt/etc/default/grub
 }
 
 #cmdline
@@ -192,11 +192,23 @@ EOF
 # entries with efi
 function entries {
 cat << EOF >> /mnt/etc/grub.d/40_custom
-menuentry "Arch efi dual boot" {
+menuentry "Arch zen efi" {
         insmod fat
         insmod chain
         search --no-floppy --set=root --file /EFI/linux/arch-linux-zen.efi 
         chainloader /EFI/linux/arch-linux-zen.efi
+}
+menuentry "Arch lts efi" {
+        insmod fat
+        insmod chain
+        search --no-floppy --set=root --file /EFI/linux/arch-linux-lts.efi 
+        chainloader /EFI/linux/arch-linux-lts.efi
+}
+menuentry "Arch linux efi" {
+        insmod fat
+        insmod chain
+        search --no-floppy --set=root --file /EFI/linux/arch-linux.efi 
+        chainloader /EFI/linux/arch-linux.efi
 }
 EOF
 }
@@ -336,6 +348,7 @@ function runscript {
 
 
 runscript
+
 
 
 
