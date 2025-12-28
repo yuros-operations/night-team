@@ -1,0 +1,14 @@
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = linux-zen
+Target = linux-lts
+Target = linux
+Target = grub
+Target = systemd
+
+[Action]
+Description = Update GRUB configuratiom
+When = PostTransaction
+Exec = /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg
