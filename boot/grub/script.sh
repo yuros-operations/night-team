@@ -151,6 +151,10 @@ function grub-mv {
     rm -fr /mnt/boot/EFI/EFI
 }
 
+function grub-hooks {
+   mkdir -p /mnt/etc/pacman.d/hooks &&
+   cp -r /install/etc/pacman.d/hooks/90-grub-update.hook /mnt/etc/pacman.d/hooks/
+}
 
 # efi
 function efi {
@@ -284,6 +288,11 @@ function runscript {
     clear &&
     sleep 10
 
+    echo "configure grub hooks"
+    grub-hooks
+    clear &&
+    sleep 10    
+
     echo "configure mkinitcpio"
     mkinitcpio
     clear &&
@@ -327,6 +336,7 @@ function runscript {
 
 
 runscript
+
 
 
 
