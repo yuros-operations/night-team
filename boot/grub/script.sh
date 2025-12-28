@@ -217,17 +217,17 @@ function runscript {
     echo "configure proc"
     create_proc
     clear &&
-    sleep 2
+    sleep 5
 
     echo "configure boot"
     create_boot
     clear &&
-    sleep 2
+    sleep 5
 
     echo "configure efi"
     create_efis
     clear &&
-    sleep 2
+    sleep 5
 
         #echo "configure efi on windows"
         #create_efid
@@ -237,57 +237,57 @@ function runscript {
     echo "configure swap"
     create_swap
     clear &&
-    sleep 2
+    sleep 5
 
     echo "configure home"
     create_home
     clear &&
-    sleep 2
+    sleep 5
 
     echo "installing packages"
     packages
     clear &&
-    sleep 2
+    sleep 5
 
     echo "configure network"
     network
     clear &&
-    sleep 2
+    sleep 5
 
     echo "configure hosname"
     hostname
     clear &&
-    sleep 2    
+    sleep 5    
 
     echo "configure time"
     gentime
     clear &&
-    sleep 2
+    sleep 5
 
     echo "configure locale"
     locale
     clear &&
-    sleep 2
+    sleep 5
 
     echo "configure user"
     user
     clear &&
-    sleep 2
+    sleep 5
 
     echo "generate grub"
     grub_install
     clear &&
-    sleep 2
+    sleep 10
 
     echo "configure cmdline"
     cmdline
     clear &&
-    sleep 2
+    sleep 10
 
     echo "configure mkinitcpio"
     mkinitcpio
     clear &&
-    sleep 2
+    sleep 10
 
         #echo "configure mkinitcpiod"
         #mkinitcpiod
@@ -302,7 +302,7 @@ function runscript {
     echo "configure efi"
     efi
     clear &&
-    sleep 2
+    sleep 10
 
         #echo "configure efi on windows"
         #efi-windows
@@ -312,21 +312,22 @@ function runscript {
     echo "configure entries"
     entries
     clear &&
-    sleep 2
+    sleep 10
 
     echo "configure grub boot"
     gen_grub
     clear &&
-    sleep 2
+    sleep 10
 
     echo "configure secure boot"
     secure
     clear &&
-    sleep 2
+    sleep 10
 }
 
 
 runscript
+
 
 
 
