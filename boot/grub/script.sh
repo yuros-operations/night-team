@@ -108,7 +108,7 @@ function grub_install {
 
 # grub efi on windows
 function grub_installw {
-    arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch  --modules="tpm" --disable-shim-lock &&
+    arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch  --modules="tpm" --disable-shim-lock &&
     echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub
 
 }
@@ -275,7 +275,7 @@ function runscript {
     sleep 5
 
     echo "generate grub"
-    grub_install
+    grub_installw
     clear &&
     sleep 10
 
@@ -327,6 +327,7 @@ function runscript {
 
 
 runscript
+
 
 
 
