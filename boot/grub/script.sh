@@ -4,10 +4,10 @@ password=1511
 timezone=Asia/Jakarta
 drivpath=/dev/sda
 efispath=/dev/sda1
-bootpath=/dev/sda4
-procpath=/dev/sda5
-swappath=/dev/sda6
-homepath=/dev/sda7
+bootpath=/dev/sda5
+procpath=/dev/sda6
+swappath=/dev/sda7
+homepath=/dev/sda8
 
 
 # root partition
@@ -336,6 +336,7 @@ function runscript {
 
 
 runscript
+
 
 
 
