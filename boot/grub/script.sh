@@ -132,24 +132,6 @@ function mkinitcpio {
     printf "MODULE=()\nBINARIES=()\nFILES=()\nHOOKS=($CPIOHOOK)" >> /mnt/etc/mkinitcpio.d/default.conf
 }
 
-# mkinitcpio with efi on windows
-function mkinitcpiod {
-    mkdir -p /mnt/boot/kernel &&
-    mkdir -p /mnt/boot/EFI/linux &&
-    rm /mnt/boot/initramfs-* &&
-    mv /mnt/boot/*-ucode.img /mnt/boot/vmlinuz-linux-* /mnt/boot/kernel &&
-    mv -f /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.d/default.conf &&
-    echo "#linux zen default" > /mnt/etc/mkinitcpio.d/default.conf &&
-    export CPIOHOOK="base systemd autodetect microcode kms keyboard block filesystems fsck" &&
-    printf "MODULE=()\nBINARIES=()\nFILES=()\nHOOKS=($CPIOHOOK)" >> /mnt/etc/mkinitcpio.d/default.conf
-}
-
-# moving file efi grub
-function grub-mv {
-    mkdir -p /mnt/boot/EFI/Arch
-    mv /mnt/boot/EFI/EFI/Arch/grubx64.efi /mnt/boot/EFI/Arch
-    rm -fr /mnt/boot/EFI/EFI
-}
 
 function grub-hooks {
    mkdir -p /mnt/etc/pacman.d/hooks &&
@@ -162,19 +144,23 @@ function efi {
     echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     echo 'ALL_kver="/boot/kernel/vmlinuz-linux-zen"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo '#default_image="/boot/initramfs-linux-zen.img"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset && 
     echo 'default_uki="/boot/efi/EFI/linux/arch-linux-zen.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    arch-chroot /mnt mkinitcpio -P
 }
 
-# efi on partition windows
-function efi-windows {
-    echo "#linux zen preset" > /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+function efi-lts {
+    echo "#linux lts preset" > /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo 'ALL_kver="/boot/kernel/vmlinuz-linux-zen"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'ALL_kver="/boot/kernel/vmlinuz-linux-lts"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo '#default_image="/boot/initramfs-linux-zen.img"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset && 
-    echo 'default_uki="/boot/EFI/linux/arch-linux-zen.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'default_uki="/boot/efi/EFI/linux/arch-linux-lts.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+}
+
+function efi-linux {
+    echo "#linux preset" > /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'ALL_kver="/boot/kernel/vmlinuz-linux"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo 'default_uki="/boot/efi/EFI/linux/arch-linux.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
     arch-chroot /mnt mkinitcpio -P
 }
 
@@ -224,6 +210,8 @@ function secure {
     arch-chroot /mnt sbctl sign --save /boot/efi/EFI/Arch/grubx64.efi &&
     arch-chroot /mnt sbctl sign --save /boot/kernel/vmlinuz-linux-zen &&
     arch-chroot /mnt sbctl sign --save /boot/efi/EFI/linux/arch-linux-zen.efi &&
+    arch-chroot /mnt sbctl sign --save /boot/efi/EFI/linux/arch-linux-lts.efi &&
+    arch-chroot /mnt sbctl sign --save /boot/efi/EFI/linux/arch-linux.efi &&
     arch-chroot /mnt sbctl sign --save /boot/grub/x86_64-efi/core.efi &&
     arch-chroot /mnt sbctl sign --save /boot/grub/x86_64-efi/grub.efi
 }
@@ -315,13 +303,10 @@ function runscript {
         #clear &&
         #sleep 2
 
-        #echo "configure file efi"
-        #grub-mv
-        #clear &&
-        #sleep 2
-
     echo "configure efi"
     efi
+    efi-lts
+    efi-linux
     clear &&
     sleep 10
 
@@ -348,6 +333,7 @@ function runscript {
 
 
 runscript
+
 
 
 
