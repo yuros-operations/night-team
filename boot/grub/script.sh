@@ -54,7 +54,7 @@ function create_home {
 
 # package
 function packages {
-    pacstrap /mnt base base-devel neovim linux-zen linux-firmware amd-ucode mkinitcpio efibootmgr os-prober grub iwd ntfs-3g sbctl --noconfirm &&
+    pacstrap /mnt base base-devel neovim linux-zen linux linux-firmware amd-ucode mkinitcpio efibootmgr os-prober grub iwd ntfs-3g sbctl --noconfirm &&
     genfstab -U /mnt >> /mnt/etc/fstab
 }
 
@@ -125,7 +125,7 @@ function mkinitcpio {
     mkdir -p /mnt/boot/kernel &&
     mkdir -p /mnt/boot/efi/EFI/linux &&
     rm /mnt/boot/initramfs-* &&
-    mv /mnt/boot/*-ucode.img /mnt/boot/vmlinuz-linux-* /mnt/boot/kernel &&
+    mv /mnt/boot/*-ucode.img /mnt/boot/vmlinuz-linux* /mnt/boot/kernel &&
     mv -f /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.d/default.conf &&
     echo "#linux zen default" > /mnt/etc/mkinitcpio.d/default.conf &&
     export CPIOHOOK="base systemd autodetect microcode kms keyboard block filesystems fsck" &&
@@ -333,6 +333,7 @@ function runscript {
 
 
 runscript
+
 
 
 
