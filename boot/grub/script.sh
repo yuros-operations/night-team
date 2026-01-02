@@ -148,19 +148,19 @@ function efi {
 }
 
 function efi-lts {
-    echo "#linux lts preset" > /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo 'ALL_kver="/boot/kernel/vmlinuz-linux-lts"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo 'default_uki="/boot/efi/EFI/linux/arch-linux-lts.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo "#linux lts preset" > /mnt/etc/mkinitcpio.d/linux-lts.preset &&
+    echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-lts.preset &&
+    echo 'ALL_kver="/boot/kernel/vmlinuz-linux-lts"' >> /mnt/etc/mkinitcpio.d/linux-lts.preset &&
+    echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-lts.preset &&
+    echo 'default_uki="/boot/efi/EFI/linux/arch-linux-lts.efi"' >> /mnt/etc/mkinitcpio.d/linux-lts.preset &&
 }
 
 function efi-linux {
-    echo "#linux preset" > /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo 'ALL_kver="/boot/kernel/vmlinuz-linux"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
-    echo 'default_uki="/boot/efi/EFI/linux/arch-linux.efi"' >> /mnt/etc/mkinitcpio.d/linux-zen.preset &&
+    echo "#linux preset" > /mnt/etc/mkinitcpio.d/linux.preset &&
+    echo 'ALL_config="/etc/mkinitcpio.d/default.conf"' >> /mnt/etc/mkinitcpio.d/linux.preset &&
+    echo 'ALL_kver="/boot/kernel/vmlinuz-linux"' >> /mnt/etc/mkinitcpio.d/linux.preset &&
+    echo "PRESETS=('default')" >> /mnt/etc/mkinitcpio.d/linux.preset &&
+    echo 'default_uki="/boot/efi/EFI/linux/arch-linux.efi"' >> /mnt/etc/mkinitcpio.d/linux.preset &&
     arch-chroot /mnt mkinitcpio -P
 }
 
@@ -333,6 +333,7 @@ function runscript {
 
 
 runscript
+
 
 
 
