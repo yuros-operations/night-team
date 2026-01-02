@@ -230,4 +230,11 @@ hasil:
 2. bisa masuk jika langsung menggunakn uki
 3. grub nya masih security boot fail
 
+## uji coba script v0.0.23
+secure boot dengan update kernel hooks
+
+hasil:
+1. berhasil pada laptop lab (roket)
+2. berhasil pada laptop hp amd (sultan)
+
 
